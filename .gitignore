@@ -3,3 +3,7 @@ node_modules/
 
 #webstorm
 .idea/
+
+#coverage
+*.lcov
+.nyc_output/
