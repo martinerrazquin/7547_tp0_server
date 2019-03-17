@@ -1,17 +1,4 @@
-
-var buildResponse = function(err, result) {
-    var response = {};
-
-    if (!err) {
-      response.result = result;
-    } else {
-      response.error = err;
-    }
-
-    return response;
-}
-
-module.exports = function(app, options) {
+module.exports = function(app) {
   var router = app.express.Router();
 
   router.get('/search', function(req, res, next) {
@@ -25,16 +12,24 @@ module.exports = function(app, options) {
       return;
     }
 
-    options.booksService.search(query.query, {
+    app.options.booksService.search(query.query, {
       offset: (query.page - 1) * 10
     }, function(err, results) {
-      res.json(buildResponse(err, results));
+      if (!err) {
+        res.json({result: result});
+      } else {
+        res.status(500).send();
+      }
     });
   });
 
   router.get('/:id', function(req, res, next) {
-    options.booksService.lookup(req.params.id, function(err, result) {
-      res.json(buildResponse(err, result));
+    app.options.booksService.lookup(req.params.id, function(err, result) {
+      if (!err) {
+        res.json({result: result});
+      } else {
+        res.status(404).send();
+      }
     });
   });
 

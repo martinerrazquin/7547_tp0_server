@@ -1,4 +1,4 @@
-module.exports = function(app, options) {
+module.exports = function(app) {
     var router = app.express.Router();
 
     /* GET home page. */
@@ -6,5 +6,5 @@ module.exports = function(app, options) {
       res.render('index', { title: 'Express' });
     });
 
-    require('./books')(app, options);
+    require('./books')(app);
 };

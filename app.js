@@ -17,11 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var options = {
+app.options = {
     booksService: require('google-books-search')
 }
 
-require('./routes')(app, options);
+require('./routes')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
