@@ -1,22 +1,30 @@
-var express = require('express');
-var router = express.Router();
 
-router.get('/search', function(req, res, next) {
-  res.send({
-    results: [
-      {name: "some book"}, 
-      {name: "some other book"}
-    ]
+var buildResponse = function(err, result) {
+    var response = {};
+
+    if (!err) {
+      response.result = result;
+    } else {
+      response.error = err;
+    }
+
+    return response;
+}
+
+module.exports = function(app, options) {
+  var router = app.express.Router();
+
+  router.get('/search', function(req, res, next) {
+    options.booksService.search(req.query.query, function(err, results) {
+      res.json(buildResponse(err, results));
+    });
   });
-});
 
-router.get('/:id', function(req, res, next) {
-  res.send({
-    id: req.params.id,
-    name: "some book",
-    author: "the author",
-    publication_date: "01/01/1900"
+  router.get('/:id', function(req, res, next) {
+    options.booksService.lookup(req.params.id, function(err, result) {
+      res.json(buildResponse(err, result));
+    });
   });
-});
 
-module.exports = router;
+  app.use('/books', router);
+};
