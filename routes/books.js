@@ -15,8 +15,10 @@ module.exports = function(app) {
     app.options.booksService.search(query.query, {
       offset: (query.page - 1) * 10
     }, function(err, result) {
-      if (!err) {
+      if (!err && result.length > 0) {
         res.json({result: result});
+      } else if (!err) {
+        res.status(404).send();
       } else {
         res.status(500).send();
       }
